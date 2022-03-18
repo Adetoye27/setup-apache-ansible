@@ -1,28 +1,38 @@
-#WRITE A SIMPLE PLAY TO DEPLOY APACHE ON UBUNTU AND AMAZON AMI
-- name: configure apache on amazon linux instances
-  hosts: amazon
+#A SIMPLE PLAY TO DEPLOY APACHE ON UBUNTU 
+- name: configure apache on ubuntu linux instances
+  hosts: ubuntu
   tasks:
 
-    - name: Upgrade all packages
-      yum:
-        name: '*'
+    - name: Update all packages to their latest version
+      apt:
+        name: "*"
         state: latest
 
-    - name: Install the latest version of Apache
-      yum:
-        name: httpd
-        state: latest
+    - name: Install apache httpd  (state=present is optional)
+      apt:
+        name: apache2
+        state: present
+
     - name: Start service httpd, if not started
       ansible.builtin.service:
-        name: httpd
+        name: apache2
         state: started   
 
     - name: Enable service httpd, and not touch the state
       ansible.builtin.service:
-        name: httpd
+        name: apache2
         enabled: yes
     - name: Copy content of html to destination
       ansible.builtin.copy:
         src: /home/index.html
         dest: /var/ww/html
+
+#Second play to install git
+- name: configure git on ubuntu linux instances
+  hosts: ubuntu
+  tasks:
+
+    - name: Install the package "git"
+      apt:
+        name: git
         
