@@ -1,0 +1,28 @@
+#WRITE A SIMPLE PLAY TO DEPLOY APACHE ON UBUNTU AND AMAZON AMI
+- name: configure apache on amazon linux instances
+  hosts: amazon
+  tasks:
+
+    - name: Upgrade all packages
+      yum:
+        name: '*'
+        state: latest
+
+    - name: Install the latest version of Apache
+      yum:
+        name: httpd
+        state: latest
+    - name: Start service httpd, if not started
+      ansible.builtin.service:
+        name: httpd
+        state: started   
+
+    - name: Enable service httpd, and not touch the state
+      ansible.builtin.service:
+        name: httpd
+        enabled: yes
+    - name: Copy content of html to destination
+      ansible.builtin.copy:
+        src: /home/index.html
+        dest: /var/ww/html
+        
